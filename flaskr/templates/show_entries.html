@@ -1,0 +1,23 @@
+<meta http-equiv="refresh" content="5">
+{% extends "layout.html" %}
+{% block body %}
+ <ul class=doctors>
+    {% for doctor in doctors %}
+    <li class="doctor"><h2>{{doctor.name}}</h2>
+        <h2>Start Time : {{doctor.startTime}}  End Time : {{doctor.endTime}} </h2>
+        {% else %}
+    <li><em>Unbelievable. No entries here so far</em>
+        {% endfor %}
+
+  
+  <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+  function removeEntry(event){
+   $.getJSON($SCRIPT_ROOT + '/delete', {
+          id: event}, function(data) {
+          $(this).reload(true)
+        });
+        };
+</script>
+{% endblock %}

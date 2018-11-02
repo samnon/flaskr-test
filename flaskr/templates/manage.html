@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if session.logged_in %}
+<form action="{{ url_for('add_doctor') }}" method=post class=add-entry>
+    <dl>
+        <dt>Doctors Name:
+        <dd><input type=text size=30 name=name>
+        <dd>Start Time <input type="time" name="startTime"></dd>
+        <dd>End Time <input type="time" name="endTime"></dd>
+        <dd><input type=submit value=Save>
+    </dl>
+</form>
+{% endif %}
+<ul class=doctors>
+    <h1>Doctors</h1>
+    {% for doctor in doctors %}
+    <li class="doctor"><h2>{{doctor.name}}</h2>
+        <p>Start Time : <b class="24HourTime">{{doctor.startTime}}</b>  </p>
+        <p>End Time : <b class="24HourTime"> {{doctor.endTime}}</b>  </p>
+        {% if session.logged_in %}
+        <form action="{{ url_for('delete_doctor', id =doctor.id) }}" method=post class=add-entry>
+            <input type="submit" value="Delete">
+        </form>
+        {% endif %}
+        {% else %}
+    <li><em>Unbelievable. No entries here so far</em>
+        {% endfor %}
+
+        <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+function removeDoctor(event){
+ $.getJSON($SCRIPT_ROOT + '/deleteDoctor', {
+        id: event.toString()});
+		$(this).reload(true);
+	  };
+  
+  
+function removeEntry(event){
+ $.getJSON($SCRIPT_ROOT + '/delete', {
+        id: event})
+	.done(function(data){
+		console.log("test test test");
+		location.reload();
+		});	  
+	};
+        </script>
+        {% endblock %}
